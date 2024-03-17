@@ -13,7 +13,8 @@ namespace Ecom.Infra
     {
         public static IServiceCollection InfraServiceRegistration(this IServiceCollection services)
         {
-            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));      
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             return services;
         }
     }
