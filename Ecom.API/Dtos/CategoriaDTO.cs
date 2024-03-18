@@ -9,8 +9,13 @@ namespace Ecom.API.Dtos
         public string cat_ds_descricao { get; set; }
     }
 
-    public class ListingCategoryDTO : CategoriaDTO
+    public class ListingCategoriaDTO : CategoriaDTO
     {
-        public int cat_id_categoria { get; set; }
+        public int id { get; set; }
+    }
+
+    public class UpdateCategoriaDTO : CategoriaDTO
+    {
+        public int id { get; set; }
     }
 }
