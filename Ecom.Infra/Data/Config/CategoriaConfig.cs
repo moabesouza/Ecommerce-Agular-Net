@@ -10,6 +10,7 @@ namespace Ecom.Infra.Data.Config
         {
             builder.Property(x => x.id).IsRequired();
             builder.Property(x => x.cat_nm_nome).HasMaxLength(50);
+
             builder.HasData(
                 new CAT_Categoria { id = 1, cat_nm_nome = "Produtos de Limpeza", cat_ds_descricao = "limpeza" },
                 new CAT_Categoria { id = 2, cat_nm_nome = "Carnes", cat_ds_descricao = "Carnes frescas e processadas" },

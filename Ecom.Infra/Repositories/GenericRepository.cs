@@ -1,4 +1,5 @@
-﻿using Ecom.Core.Interfaces;
+﻿using Ecom.Core.Entities;
+using Ecom.Core.Interfaces;
 using Ecom.Infra.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Ecom.Infra.Repositories
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : class
+    public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity<int> 
     {
         private readonly AppDbContext _context;
 
@@ -55,14 +56,14 @@ namespace Ecom.Infra.Repositories
 
         public async Task<T> GetByIdAssync(int id, params Expression<Func<T, object>>[] includes)
         {
-            IQueryable<T> query = _context.Set<T>();
+            IQueryable<T> query = _context.Set<T>().Where(x => x.id == id);
 
             //aplicar os includes
             foreach (var item in includes)
             {
                 query = query.Include(item);
             }
-            return await ((DbSet<T>)query).FindAsync(id);
+            return await (query).FirstOrDefaultAsync();
         }
 
         public async Task UpdateAsync(int id, T entity)

@@ -10,14 +10,9 @@ using System.Threading.Tasks;
 namespace Ecom.Infra.Repositories
 {
     public class CategoriaRepository : GenericRepository<CAT_Categoria>, ICategoriaRepository
-    {
-        private readonly AppDbContext _context;
-
+    {  
         public CategoriaRepository(AppDbContext context) : base(context)
-        {
-           _context = context;
-        }
-
-      
+        {          
+        }     
     }
 }

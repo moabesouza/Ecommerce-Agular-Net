@@ -11,7 +11,7 @@ namespace Ecom.Core.Entities
         public string cat_nm_nome {get; set;}
         public string cat_ds_descricao { get; set; }
 
-        public virtual ICollection <PRD_Produto> Produto { get; set; }
+        public virtual ICollection <PRD_Produto> Produto { get; set; } = new HashSet<PRD_Produto>();
 
     }
 }
