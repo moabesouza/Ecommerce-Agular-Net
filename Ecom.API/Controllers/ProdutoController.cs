@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Ecom.API.Dtos;
+using Ecom.Core.Dtos;
 using Ecom.Core.Entities;
 using Ecom.Core.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -40,17 +40,52 @@ namespace Ecom.API.Controllers
         }
 
         [HttpPost("cadastrar")]
-        public async Task<ActionResult> Post(CadastrarProdutoDTO prdDTO)
+        public async Task<ActionResult> Post([FromForm] CadastrarProdutoDTO prdDTO)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {               
+                    var res = await _uOW.ProdutoRepository.CadastrarProdutoAsync(prdDTO);
+                    return res? Ok(prdDTO) : BadRequest(res);
+                }
+                return BadRequest(prdDTO);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("editar/{id}")]
+        public async Task<ActionResult> Put(int id, [FromForm] EditarProdutoDTO prdDTO)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var res = _mapper.Map<PRD_Produto>(prdDTO);
-                    await _uOW.ProdutoRepository.AddAsync(res);
-                    return Ok(res);
+                    var res = await _uOW.ProdutoRepository.EditarProdutoAsync(id, prdDTO);
+                    return res ? Ok(prdDTO) : BadRequest(res);
                 }
                 return BadRequest(prdDTO);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("excluir/{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var res = await _uOW.ProdutoRepository.DeletarProduto(id);
+                    return res ? Ok(res) : BadRequest(res);
+                }
+                return BadRequest($"Not Found This Id [{id}]");
             }
             catch (Exception ex)
             {

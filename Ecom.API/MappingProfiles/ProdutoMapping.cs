@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using Ecom.API.Dtos;
+using Ecom.API.Helper;
+using Ecom.Core.Dtos;
 using Ecom.Core.Entities;
 
 namespace Ecom.API.MappingProfiles
@@ -10,8 +11,10 @@ namespace Ecom.API.MappingProfiles
         {
 
             CreateMap<PRD_Produto, ProdutoDTO>()
-           .ForMember(dest => dest.prd_nm_categoria, opt => opt.MapFrom(src => src.Categoria.cat_nm_nome)).ReverseMap();
+           .ForMember(dest => dest.prd_nm_categoria, opt => opt.MapFrom(src => src.Categoria.cat_nm_nome))
+           .ForMember(dest => dest.prd_nm_imagem, opt => opt.MapFrom<ProdutoUrlResolver>()).ReverseMap();
             CreateMap<CadastrarProdutoDTO, PRD_Produto>().ReverseMap();
+            CreateMap<EditarProdutoDTO, PRD_Produto>().ReverseMap();
         }
     }
 }

@@ -10,6 +10,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ecom.Infra", "Ecom.Infra\Ecom.Infra.csproj", "{D2382B9D-B69E-41DB-95F0-793C2EBAFC16}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ecom.API", "Ecom.API\Ecom.API.csproj", "{5667F403-6445-4A40-8A3A-8EAAFA693770}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B0552552-9E24-4987-BED2-442BB96B65ED} = {B0552552-9E24-4987-BED2-442BB96B65ED}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

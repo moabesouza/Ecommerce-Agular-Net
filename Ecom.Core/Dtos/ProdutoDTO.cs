@@ -1,6 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
-namespace Ecom.API.Dtos
+namespace Ecom.Core.Dtos
 {
     public class BaseProdutoDTO
     {
@@ -20,12 +21,23 @@ namespace Ecom.API.Dtos
     {
         public int id { get; set; }
         public string prd_nm_categoria { get; set; } // nome categoria
+        public string prd_nm_imagem { get; set; }
     }
 
     public class CadastrarProdutoDTO : BaseProdutoDTO
     {       
         public int prd_id_categoria { get; set; } // id categoria
 
-        public IFormFile prd_nm_imagem { get; set; }
+        public IFormFile upload_image { get; set; }
+    }
+
+    public class EditarProdutoDTO : BaseProdutoDTO
+    {
+      
+        public int prd_id_categoria { get; set; } // id categoria
+
+        public string img_old { get; set; }
+
+        public IFormFile upload_image { get; set; }
     }
 }
