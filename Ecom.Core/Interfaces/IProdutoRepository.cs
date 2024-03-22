@@ -1,5 +1,6 @@
 ﻿using Ecom.Core.Dtos;
 using Ecom.Core.Entities;
+using Ecom.Core.Sharing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Ecom.Core.Interfaces
 {
     public interface IProdutoRepository: IGenericRepository<PRD_Produto>
     {
-        Task<IEnumerable<ProdutoDTO>> ConsultarTodosProdutos(string sort, int? cat_id, int pageNumber, int pageSize);
+        Task<IEnumerable<ProdutoDTO>> ConsultarTodosProdutos(ProdutoParams prd_params);
             
         Task<bool>CadastrarProdutoAsync(CadastrarProdutoDTO prdDTO);
 

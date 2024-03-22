@@ -3,9 +3,11 @@ using Azure;
 using Ecom.Core.Dtos;
 using Ecom.Core.Entities;
 using Ecom.Core.Interfaces;
+using Ecom.Core.Sharing;
 using Ecom.Infra.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,42 +30,34 @@ namespace Ecom.Infra.Repositories
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<ProdutoDTO>> ConsultarTodosProdutos(string sort, int? cat_id, int pageNumber, int pageSize)
+        public async Task<IEnumerable<ProdutoDTO>> ConsultarTodosProdutos(ProdutoParams prd_params)
         {
             var query = await _context.PRD_Produto
                 .Include(p => p.Categoria)
                 .AsNoTracking()
                 .ToListAsync();
 
-            
+            //pesquisa por nome
+            if (!string.IsNullOrEmpty(prd_params.search))
+                query = query.Where(x => x.prd_nm_nome.ToLower().Contains(prd_params.search)).ToList();
 
             //buscar categoria
-            if (cat_id != 0)
-                query = query.Where(x => x.prd_id_categoria == cat_id.Value).ToList();
+            if (prd_params.categoria_id.HasValue)
+                query = query.Where(x => x.prd_id_categoria == prd_params.categoria_id.Value).ToList();
 
-            if(!string.IsNullOrEmpty(sort))
+            //ordenação por valor
+            if (!string.IsNullOrEmpty(prd_params.sort))
             {
-                switch (sort)
+                query = prd_params.sort switch
                 {
-                    case "valor":
-                        query = query.OrderBy(x => x.prd_vl_valor).ToList();
-                        break;
-
-                    case "valorDesc":
-                        query = query.OrderByDescending(x => x.prd_vl_valor).ToList();
-                        break;
-
-                    default:
-                        query = query.OrderBy(x => x.prd_nm_nome).ToList();
-                        break;
-                }
+                    "valorAsc" => query.OrderBy(x => x.prd_vl_valor).ToList(),
+                    "valorDesc" => query.OrderByDescending(x => x.prd_vl_valor).ToList(),
+                    _ => query.OrderBy(x => x.prd_nm_nome).ToList(),
+                };
             }
 
-            //paginção
-            pageNumber = pageNumber > 0 ? pageNumber : 1;
-            pageSize = pageSize > 0 ? pageSize : 3;
-
-            query = query.Skip((pageNumber - 1) * (pageSize)).Take(pageSize).ToList();
+            //paginção        
+            query = query.Skip((prd_params.page_number - 1) * (prd_params.PageSize)).Take(prd_params.PageSize).ToList();
 
             var _result = _mapper.Map<List<ProdutoDTO>>(query);
             return _result;
@@ -187,7 +181,7 @@ namespace Ecom.Infra.Repositories
 
                     // Atualizar o produto ao repositório
                     _context.PRD_Produto.Update(res);
-                    await _context.SaveChangesAsync();                
+                    await _context.SaveChangesAsync();
                     return true;
                 }
 
