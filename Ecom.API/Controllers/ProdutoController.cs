@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Ecom.API.Errors;
 using Ecom.Core.Dtos;
 using Ecom.Core.Entities;
 using Ecom.Core.Interfaces;
@@ -22,18 +23,24 @@ namespace Ecom.API.Controllers
         }
 
         [HttpGet("todos")]
-        public async Task<ActionResult> Get()
+        public async Task<ActionResult> Get(string sort, int cat_id, int pageNumber, int pageSize)
         {
-            var src = await _uOW.ProdutoRepository.GetAllAsync(x => x.Categoria);
+            var src = await _uOW.ProdutoRepository.ConsultarTodosProdutos(sort, cat_id, pageNumber, pageSize);
             var result = _mapper.Map<List<ProdutoDTO>>(src);
             return Ok(result);
         }
 
 
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BaseCommonResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult> Get(int id)
         {
             var src = await _uOW.ProdutoRepository.GetByIdAssync(id, x => x.Categoria);
+            if (src is null)
+            {
+                return NotFound(new BaseCommonResponse(404));
+            }
             var result = _mapper.Map<ProdutoDTO>(src);
             return Ok(result);
 
@@ -45,9 +52,9 @@ namespace Ecom.API.Controllers
             try
             {
                 if (ModelState.IsValid)
-                {               
+                {
                     var res = await _uOW.ProdutoRepository.CadastrarProdutoAsync(prdDTO);
-                    return res? Ok(prdDTO) : BadRequest(res);
+                    return res ? Ok(prdDTO) : BadRequest(res);
                 }
                 return BadRequest(prdDTO);
             }

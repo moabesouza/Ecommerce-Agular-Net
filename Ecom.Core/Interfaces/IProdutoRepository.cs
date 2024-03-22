@@ -10,6 +10,8 @@ namespace Ecom.Core.Interfaces
 {
     public interface IProdutoRepository: IGenericRepository<PRD_Produto>
     {
+        Task<IEnumerable<ProdutoDTO>> ConsultarTodosProdutos(string sort, int? cat_id, int pageNumber, int pageSize);
+            
         Task<bool>CadastrarProdutoAsync(CadastrarProdutoDTO prdDTO);
 
         Task<bool> EditarProdutoAsync(int id, EditarProdutoDTO prdDTO);

@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using Azure;
 using Ecom.Core.Dtos;
 using Ecom.Core.Entities;
 using Ecom.Core.Interfaces;
 using Ecom.Infra.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using System;
 using System.Collections.Generic;
@@ -25,6 +27,48 @@ namespace Ecom.Infra.Repositories
             _fileProvider = fileProvider;
             _mapper = mapper;
         }
+
+        public async Task<IEnumerable<ProdutoDTO>> ConsultarTodosProdutos(string sort, int? cat_id, int pageNumber, int pageSize)
+        {
+            var query = await _context.PRD_Produto
+                .Include(p => p.Categoria)
+                .AsNoTracking()
+                .ToListAsync();
+
+            
+
+            //buscar categoria
+            if (cat_id != 0)
+                query = query.Where(x => x.prd_id_categoria == cat_id.Value).ToList();
+
+            if(!string.IsNullOrEmpty(sort))
+            {
+                switch (sort)
+                {
+                    case "valor":
+                        query = query.OrderBy(x => x.prd_vl_valor).ToList();
+                        break;
+
+                    case "valorDesc":
+                        query = query.OrderByDescending(x => x.prd_vl_valor).ToList();
+                        break;
+
+                    default:
+                        query = query.OrderBy(x => x.prd_nm_nome).ToList();
+                        break;
+                }
+            }
+
+            //paginção
+            pageNumber = pageNumber > 0 ? pageNumber : 1;
+            pageSize = pageSize > 0 ? pageSize : 3;
+
+            query = query.Skip((pageNumber - 1) * (pageSize)).Take(pageSize).ToList();
+
+            var _result = _mapper.Map<List<ProdutoDTO>>(query);
+            return _result;
+        }
+
 
         /// <summary>
         /// Método para cadastrar um novo produto.

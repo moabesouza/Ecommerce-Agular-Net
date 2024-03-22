@@ -15,6 +15,7 @@ namespace Ecom.API.MappingProfiles
            .ForMember(dest => dest.prd_nm_imagem, opt => opt.MapFrom<ProdutoUrlResolver>()).ReverseMap();
             CreateMap<CadastrarProdutoDTO, PRD_Produto>().ReverseMap();
             CreateMap<EditarProdutoDTO, PRD_Produto>().ReverseMap();
+
         }
     }
 }
