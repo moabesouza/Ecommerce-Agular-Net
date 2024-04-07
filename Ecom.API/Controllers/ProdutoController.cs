@@ -75,7 +75,7 @@ namespace Ecom.API.Controllers
                 if (ModelState.IsValid)
                 {
                     var res = await _uOW.ProdutoRepository.EditarProdutoAsync(id, prdDTO);
-                    return res ? Ok(prdDTO) : BadRequest(res);
+                    return res ? Ok(prdDTO) : BadRequest();
                 }
                 return BadRequest(prdDTO);
             }

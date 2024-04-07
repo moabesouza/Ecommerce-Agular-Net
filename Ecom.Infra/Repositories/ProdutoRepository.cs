@@ -79,7 +79,7 @@ namespace Ecom.Infra.Repositories
                 {
                     string root = "/imagens/produto/";
                     // Gera um nome único para a imagem com base no GUID e no nome original da imagem
-                    var nome_produto = $"{Guid.NewGuid()}" + prdDTO.upload_image.FileName;
+                    var nome_produto = $"{Guid.NewGuid()}";
 
                     if (!Directory.Exists("wwwroot" + root))
                     {
@@ -132,7 +132,7 @@ namespace Ecom.Infra.Repositories
         {
             try
             {
-                var currentProduct = await _context.PRD_Produto.FindAsync(id);
+                var currentProduct = await _context.PRD_Produto.AsNoTracking().FirstOrDefaultAsync(p => p.id == id);
                 if (currentProduct is not null)
                 {
                     string src = string.Empty;
@@ -178,7 +178,7 @@ namespace Ecom.Infra.Repositories
 
                     // Define o caminho da imagem no objeto do produto
                     res.prd_nm_imagem = src;
-
+                    res.id = id;
                     // Atualizar o produto ao repositório
                     _context.PRD_Produto.Update(res);
                     await _context.SaveChangesAsync();

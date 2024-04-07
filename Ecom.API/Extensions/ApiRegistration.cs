@@ -39,7 +39,7 @@ namespace Ecom.API.Extensions
                 {
                     pol.AllowAnyHeader()
                     .AllowAnyMethod()
-                    .WithOrigins("https://localhost:44350/");
+                    .WithOrigins("http://localhost:4200");
                 });
             });
             return services;
