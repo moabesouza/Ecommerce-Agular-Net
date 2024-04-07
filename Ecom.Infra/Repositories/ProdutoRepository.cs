@@ -30,8 +30,9 @@ namespace Ecom.Infra.Repositories
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<ProdutoDTO>> ConsultarTodosProdutos(ProdutoParams prd_params)
+        public async Task<ReturnProdutoDTO> ConsultarTodosProdutos(ProdutoParams prd_params)
         {
+            var result_ = new ReturnProdutoDTO();
             var query = await _context.PRD_Produto
                 .Include(p => p.Categoria)
                 .AsNoTracking()
@@ -56,11 +57,12 @@ namespace Ecom.Infra.Repositories
                 };
             }
 
+            result_.totalItems = query.Count();
             //paginção        
-            query = query.Skip((prd_params.page_number - 1) * (prd_params.PageSize)).Take(prd_params.PageSize).ToList();
+            query = query.Skip((prd_params.pageNumber - 1) * (prd_params.PageSize)).Take(prd_params.PageSize).ToList();
 
-            var _result = _mapper.Map<List<ProdutoDTO>>(query);
-            return _result;
+            result_.Produto = _mapper.Map<List<ProdutoDTO>>(query);
+            return result_;
         }
 
 

@@ -2,8 +2,8 @@
 {
     public class ProdutoParams
     {
-        public int max_page_size { get; set; } = 10;
-        private int _pageSize = 10;
+        public int max_page_size { get; set; } = 6;
+        private int _pageSize = 6;
 
         public int PageSize 
         { 
@@ -11,7 +11,7 @@
            set { _pageSize = value > max_page_size ? max_page_size : value ; } 
         }
 
-        public int page_number { get; set; } = 1;
+        public int pageNumber { get; set; } = 1;
 
         public string sort { get; set; }
 

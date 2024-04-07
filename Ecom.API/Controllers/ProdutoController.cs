@@ -28,9 +28,9 @@ namespace Ecom.API.Controllers
         public async Task<ActionResult> Get([FromQuery] ProdutoParams prd_params)
         {
             var src = await _uOW.ProdutoRepository.ConsultarTodosProdutos(prd_params);         
-            var result = _mapper.Map<IReadOnlyList<ProdutoDTO>>(src);
-            var total_prd = result.Count();
-            return Ok(new Pagination<ProdutoDTO>(prd_params.page_number, prd_params.PageSize, total_prd, result));
+            var result = _mapper.Map<IReadOnlyList<ProdutoDTO>>(src.Produto);
+
+            return Ok(new Pagination<ProdutoDTO>(prd_params.pageNumber, prd_params.PageSize, src.totalItems, result));
         }
 
 

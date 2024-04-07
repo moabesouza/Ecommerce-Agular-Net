@@ -24,6 +24,12 @@ namespace Ecom.Core.Dtos
         public string prd_nm_imagem { get; set; }
     }
 
+    public class ReturnProdutoDTO 
+    {
+        public int totalItems { get; set; }
+        public List<ProdutoDTO> Produto { get; set; }
+    }
+
     public class CadastrarProdutoDTO : BaseProdutoDTO
     {       
         public int prd_id_categoria { get; set; } // id categoria
